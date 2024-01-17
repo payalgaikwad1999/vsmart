@@ -3,32 +3,82 @@ import Authuser from '../Authentication/Authuser';
 import { Link } from 'react-router-dom';
 
 const Checkout = () => {
+
   const { http, user, token } = Authuser();
   const [Cart, setCart] = useState([]);
-
   const [subtotal, setSubtotal] = useState(0);
-  const [subto, setSubto] = useState(0);
   const [gst, setGst] = useState(0);
   const [pv, setPv] = useState(0);
   const [disc, setDisc] = useState(0);
+  const [Order, setOrder] = useState({
+    product_id: [], // An array of product IDs
+    product_qty: [], // An array of product quantities
+    sale_price: [], // An array of product prices
+    discount: [], // An array of discounts
+    pv_value: [], // An array of point values
+    prototal: [], // An array of subtotals
+    gst: [], // An array of GST values
+
+    order_address: user.address, // Address for the order
+    paymentmode: '', // Payment mode (adjust as needed)
+    totalgst: '', // Total GST
+
+    total: '', // Total order amount
+    total_discount: '', // Total order discount
+    totalpv: '', // Total point value
+  })
+
+
   const getCartItem = () => {
     http.get(`/get-cart-list`)
       .then((res) => {
-        setCart(res.data.cart);
-        console.log(res.data.cart);
-      }).catch((e) => {
-        // console.log(e);
-      });
+        const cartdata = res.data.cart;
+        // console.log(cartdata);
+        const productIds = [];
+        const productQtys = [];
+        const productPrices = [];
+        const productDiscounts = [];
+        const productPvValues = [];
+        const productTotals = [];
+        const productGsts = [];
+
+        cartdata.forEach((item) => {
+          productIds.push(item.product_id);
+          productQtys.push(item.cart_product_qty);
+          productPrices.push(item.sale_price);
+          productDiscounts.push(item.discount);
+          productPvValues.push(item.point_value);
+          productTotals.push(item.cart_price);
+          productGsts.push(item.tax_per);
 
 
+        })
 
-  }
+        // Assuming the response contains the list of cart items
+
+        setOrder((prevOrder) => ({
+          ...prevOrder,
+          product_id: productIds, // An array of product IDs
+          product_qty: productQtys, // An array of product quantities
+          sale_price: productPrices, // An array of product prices
+          discount: productDiscounts, // An array of discounts
+          pv_value: productPvValues, // An array of point values
+          prototal: productTotals, // An array of subtotals
+          gst: productGsts,
+
+        }))
+
+        setCart(cartdata);
+      })
+  };
   useEffect(() => {
     getCartItem();
   }, [token]);
   useEffect(() => {
+    // Calculate the subtotal whenever the cart items change
+
     const newSubtotal = Cart.reduce(
-      (accumulator, item) => accumulator + item.online_price * item.cart_product_qty,
+      (accumulator, item) => accumulator + item.sale_price * item.cart_product_qty,
       0
     );
     setSubtotal(newSubtotal);
@@ -36,7 +86,7 @@ const Checkout = () => {
     // Calculate the Gst whenever the cart items change
     // $gst = ($subto * $task->tax_per) / (100 + $task->tax_per);
     const gst = Cart.reduce(
-      (accumulator, item) => accumulator + (item.online_price * item.cart_product_qty * item.tax_per) / (100 + item.tax_per),
+      (accumulator, item) => accumulator + (item.sale_price * item.cart_product_qty * item.tax_per) / (100 + item.tax_per),
       0
     );
     setGst(gst);
@@ -59,28 +109,64 @@ const Checkout = () => {
       0
     );
     setDisc(disc);
-    console.log(disc);
+    // console.log(disc);
+
+
+
+    setOrder((prevOrder) => ({
+      ...prevOrder,
+      total: newSubtotal,
+      totalgst: gst,
+      total_discount: disc,
+      totalpv: pv,
+    }));
+
   }, [Cart]);
 
-  let mydata = [{
-    name: "Cash On Delivery",
-    rs: "5000"
-  },
-  {
-    name: " Online Transfer",
-    rs: "5000"
-  }, {
-    name: "Use Wallet-bal-Current-Month",
-    rs: "0.00"
-  }, {
-    name: "Repurchase Amount",
-    rs: "",
-
+  const OninputChange = (e) => {
+    console.log(e);
+    // Set({ ...Order, [e.target.name]: e.target.value });
+    setOrder((prevOrder) => ({
+      ...prevOrder,
+      [e.target.name]: e.target.value
+    }));
   }
-  ]
+
+  const placeOrder = (e) => {
+    console.log(Order);
+
+    e.preventDefault();
+    // console.log(Order.product_id);
+    http.post(`/order_now`, Order)
+      .then((res) => {
+        console.log(res.data + "hello payal");
+        alert(res.data.msg + "Are you sure?")
+      }).catch(function (er) {
+        console.log(er);
+      });
+
+  };
+ 
+
+  // let mydata = [{
+  //   name: "Cash On Delivery",
+  //   rs: "5000"
+  // },
+  // {
+  //   name: "  Transfer",
+  //   rs: "5000"
+  // }, {
+  //   name: "Use Wallet-bal-Current-Month",
+  //   rs: "0.00"
+  // }, {
+  //   name: "Repurchase Amount",
+  //   rs: "",
+
+  // }
+  // ]
   return (
 
-    <div className='indexmain'>
+    <div className='indexmain' >
       <div className='container-fluid '>
         <div className='row'>
           <div className='shop-bg-main'>
@@ -144,7 +230,7 @@ const Checkout = () => {
                       <div className='col-lg-6 col-md-6 col-sm-12'>
                         <ul type='none' style={{ marginLeft: "30%" }}>
                           <li>Subtotal </li>
-                          <li>Gst </li>
+                          <li>Tax </li>
                           <li>P V Value</li>
                           <li>Discount </li>
 
@@ -172,7 +258,7 @@ const Checkout = () => {
           </div>
         </div>
       </div>
-     
+
 
 
       <div className='container shadow px-5 py-5' style={{ marginTop: "100px", border: "2", backgroundColor: "white" }}>
@@ -180,11 +266,12 @@ const Checkout = () => {
         <hr className='py-3 px-3 bold text-success'></hr>
         <div className='container'>
           <div className='row'>
+
             <div className="col-lg-6 col-md-6 col-sm-12">
               <div className="card card-home" style={{ borderRadius: "10px" }}>
                 <div className="card-body">
-                  <h3 className="card-title mb-3">Home</h3>
-                  <p className="card-text  mb-3">Id Voluptas Ut Saepe</p>
+                  <h1 className="card-title mb-3">Home</h1>
+                  <p className="card-text  mb-3" style={{color:"black",fontSize:"15px"}}>{user.address}</p>
 
                 </div>
               </div>
@@ -192,53 +279,89 @@ const Checkout = () => {
             <div className="col-lg-6 col-md-6 col-sm-12">
               <div className="card card-home" style={{ borderRadius: "10px" }}>
                 <div className="card-body">
-                  <h3 className="card-title mb-3">Contact Number</h3>
-                  <p className="card-text mb-3">85</p>
+                  <h1 className="card-title mb-3">Contact Number</h1>
+                  <p className="card-text mb-3" style={{color:"black",fontSize:"15px"}}>{user.mob_no}</p>
 
                 </div>
               </div>
+             
             </div>
-
-
+           
           </div>
+      
         </div>
       </div>
       <div className='container-fluid  shadow px-5 py-5' style={{ marginTop: "100px", border: "2", backgroundColor: "white" }}>
         <h3 className='text-success'>PAYMENT OPTION</h3>
         <hr className='py-3 px-3 bold text-success'></hr>
-        <div className='container'>
-          <div className='row'>{
-            mydata.map((data) => (
-              <div className='col-lg-3 col-md-6 col-sm-12'>
-                <div className="card card-payment" style={{ borderRadius: "10px" }}>
-                  <div className="card-body">
-                    <label>
-                      <input type='radio' name='' value='CashOnDelivery' style={{ width: "17px", height: "17px",}} />
-                      <b style={{ color: "black", fontSize: "18px" }}>{data.name}</b>
-                    </label>
-                    <h3 className="card-title mb-2" style={{ fontSize: "25px" }}>&#8377; {data.rs}</h3>
-                  </div>
-                </div>
+
+        <div className='row'>
+
+          <div className='col-lg-3 col-md-6 col-sm-12'>
+            <div className="card card-payment" style={{ borderRadius: "10px" }}>
+              <div className="card-body">
+                <label>
+                  <input type='radio' name="paymentmode" value={'cash on delivery'} onClick={(e) => OninputChange(e)} style={{ width: "17px", height: "17px", }} />
+                  <b style={{ color: "black", fontSize: "15px" }}>Cash On Delivery</b>
+                </label>
+                <h3 className="card-title mb-2" style={{ fontSize: "25px" }}>&#8377; {subtotal.toFixed(2)}</h3>
               </div>
-            ))
-          }
+            </div>
           </div>
+          <div className='col-lg-3 col-md-6 col-sm-12'>
+            <div className="card card-payment" style={{ borderRadius: "10px" }}>
+              <div className="card-body">
+                <label>
+                  <input type='radio' name='' value='CashOnDelivery' style={{ width: "17px", height: "17px", }} />
+                  <b style={{ color: "black", fontSize: "15px" }}>Online Transfer</b>
+                </label>
+                <h3 className="card-title mb-2" style={{ fontSize: "25px" }}>&#8377; {subtotal.toFixed(2)}</h3>
+              </div>
+            </div>
+          </div>
+          <div className='col-lg-3 col-md-6 col-sm-12'>
+            <div className="card card-payment" style={{ borderRadius: "10px" }}>
+              <div className="card-body">
+                <label>
+                  <input type='radio' name='' value='CashOnDelivery' style={{ width: "17px", height: "17px", }} />
+                  <b style={{ color: "black", fontSize: "15px" }}>Use Wallet balance Current Month
+                  </b>
+                </label>
+                <h3 className="card-title mb-2" style={{ fontSize: "25px" }}>&#8377;0.00 </h3>
+              </div>
+            </div>
+          </div>
+          <div className='col-lg-3 col-md-6 col-sm-12'>
+            <div className="card card-payment" style={{ borderRadius: "10px" }}>
+              <div className="card-body" style={{ marginBottom: "40px" }}>
+                <label>
+                  <input type='radio' name='' value='CashOnDelivery' style={{ width: "17px", height: "17px", }} />
+                  <b style={{ color: "black", fontSize: "15px" }}>Repurchase Amount
+
+                  </b>
+                </label>
+                <h3 className="card-title mb-2" style={{ fontSize: "25px" }}>    ₹</h3>
+              </div>
+            </div>
+          </div>
+
         </div>
+
         <div style={{ marginTop: "90px" }}>
-          <label style={{ fontSize: "18px", color: "black", }}>  <input type='checkbox'  style={{ marginRight: "8px" , width: "17px", height: "17px",}} />
+          <label style={{ fontSize: "18px", color: "black", }}>  <input type='checkbox' style={{ marginRight: "8px", width: "17px", height: "17px", }} />
             By making this purchase you agree to our Terms and Conditions
           </label>
         </div>
         <div class="d-grid gap-2">
-        <div className='btncheck' style={{ display: "flex", justifyContent: "center" }}>
-          <button type="button" class="btn-process btn-success p-3" ><Link to='' style={{ textDecoration: "none", color: "white" }}>CONFIRM ORDER</Link> </button>
+          <div className='btncheck' style={{ display: "flex", justifyContent: "center" }}>
+            <button type="submit" class="btn-process btn-success p-3" onClick={(e) => placeOrder(e)}><Link to='' style={{ textDecoration: "none", color: "white" }}>CONFIRM ORDER</Link> </button>
+
+          </div>
 
         </div>
-
-      </div>
       </div>
     </div>
-
+    // type="submit" onClick={(e)=>placeOrder(e)}
 
   )
 }

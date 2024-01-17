@@ -48,7 +48,7 @@ const Product = () => {
                 <div className="row">
                     {Product2.slice(0, 16).filter((pro) => pro.featured === 1).map((data, index) => ( // Added index parameter for map
                         <div key={index} className="col-lg-6 col-md-6 col-sm-12"> {/* Added key prop to the outermost div */}
-                            <div className="card mb-3" style={{ maxWidth: 600 }}>
+                            <div className="card mb-3 " style={{ maxWidth: 600 }}>
                                 <div className="row g-0">
                                     <div className="col-md-4 col-4">
                                         <div className='mae d-flex'>

@@ -74,11 +74,37 @@ const Index = () => {
         }
       }]
   };
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth" // Smooth scrolling
+    });
+  };
+
+  // Show/hide scroll to top button based on scroll position
+  const scrollFunction = () => {
+    const scrollToTopButton = document.getElementById("scrollToTopBtn");
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+      scrollToTopButton.style.display = "block";
+    } else {
+      scrollToTopButton.style.display = "none";
+    }
+  };
+
+  // Handle scroll event
+  useEffect(() => {
+    window.addEventListener("scroll", scrollFunction);
+    return () => {
+      window.removeEventListener("scroll", scrollFunction);
+    };
+  }, []);
 
   return (
-    <div className='indexmain' style={{}}>
+    <div className='indexmain'>
+
+    
       <div className="container-fluid" >
-        <div className='container'>
+        <div className='container' >
           <Carousel>
             {
               Slider1.map((slider) => (
@@ -134,7 +160,7 @@ const Index = () => {
           <Newm></Newm>
         </div>
           </div>*/}
-
+          <button className='scroll-btn' onClick={scrollToTop} id="scrollToTopBtn" style={{ display: 'none' }} ><i class="fa-solid fa-arrow-up scroll-icon"></i></button>
     </div>
   )
 }

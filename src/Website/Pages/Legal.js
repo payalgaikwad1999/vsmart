@@ -2,7 +2,8 @@ import React from 'react'
 
 const Legal = () => {
   return (
-    <div>Legal</div>
+    <div>
+    </div>
   )
 }
 

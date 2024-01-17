@@ -121,6 +121,29 @@ const Subbrand = () => {
     }
   }
 
+  // arrowup
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth" // Smooth scrolling
+    });
+  };
+  const scrollFunction = () => {
+    const scrollToTopButton = document.getElementById("scrollToTopBtn");
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+      scrollToTopButton.style.display = "block";
+    } else {
+      scrollToTopButton.style.display = "none";
+    }
+  };
+
+  // Handle scroll event
+  useEffect(() => {
+    window.addEventListener("scroll", scrollFunction);
+    return () => {
+      window.removeEventListener("scroll", scrollFunction);
+    };
+  }, []);
   return (
     <div className='indexmain'>
       <div className='container-fluid mt-5'>
@@ -241,7 +264,7 @@ const Subbrand = () => {
                           <h6>
                             <b className='bmr1' style={{ textAlign: "center" }}>MRP:<s className='mrp'>{data.mrp_price}</s><span className='only'>{data.sale_price}/only</span></b>
                           </h6>
-                          <button type="button" className="b-card  p-3 mt-3">{token ? (<Link onClick={() => addTocart(data.product_id)} style={{ color: "white", textDecoration: "none" }}><i className="fa-solid fa-basket-shopping"></i> Add To Cart </Link>) : (<Link to={'/login'} style={{ color: "white", textDecoration: "none" }}> <i className="fa-solid fa-basket-shopping"></i> Add To Cart</Link>)}</button>
+                          <button type="button" className="b-card  p-3 mt-3 bg-success">{token ? (<Link onClick={() => addTocart(data.product_id)} style={{ color: "white", textDecoration: "none" }}><i className="fa-solid fa-basket-shopping"></i> Add To Cart </Link>) : (<Link to={'/login'} style={{ color: "white", textDecoration: "none" }}> <i className="fa-solid fa-basket-shopping"></i> Add To Cart</Link>)}</button>
                         </div>
                       </div>
 
@@ -267,7 +290,8 @@ const Subbrand = () => {
         </div>
       </div>
 
-      {/*card end */}
+      <button className='scroll-btn' onClick={scrollToTop} id="scrollToTopBtn" style={{ display: 'none' }} ><i class="fa-solid fa-arrow-up scroll-icon"></i></button>
+
     </div>
   )
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useLocation, useSearchParams } from 'react-router-dom'
 import Authuser from '../Authentication/Authuser';
 import { Dropdown } from "react-bootstrap";
 import Offcanvas from 'react-bootstrap/Offcanvas';
@@ -17,6 +17,7 @@ const Header = () => {
   const handleInputChange = event => {
     setSearchQuery(event.target.value);
   };
+
   // search product end
 
   // category api start
@@ -109,7 +110,7 @@ const Header = () => {
   }, [])
 
   // calculate 
-  const [rate, setrate] = useState(10);
+  const [rate, setrate] = useState(0);
   const [qty, setqty] = useState(0);
   const [total, settotal] = useState(0);
 
@@ -152,13 +153,13 @@ const Header = () => {
     // Calculate the subtotal 
 
     const newSubtotal = Cart.reduce(
-      (accumulator, item) => accumulator + item.online_price * item.cart_product_qty,
+      (accumulator, item) => accumulator + item.sale_price * item.cart_product_qty,
       0
     );
     setSubtotal(newSubtotal);
 
     const gst = Cart.reduce(
-      (accumulator, item) => accumulator + (item.online_price * item.cart_product_qty * item.tax_per) / (100 + item.tax_per),
+      (accumulator, item) => accumulator + (item.sale_price * item.cart_product_qty * item.tax_per) / (100 + item.tax_per),
       0
     );
     setGst(gst);
@@ -229,17 +230,29 @@ const Header = () => {
               <input className="form-control mt-1 ms-1 mb-0 border-0 border-white"
                 type="text" value={searchQuery} onChange={handleInputChange} placeholder="Search Anything" aria-label="Search" style={{ width: "300px", height: "40px", fontSize: "17px" }} />
               <button className="btn mt-1 ms-1 mb-1 border-0" style={{ width: "50px", height: "40px" }}>
-                <Link
-
-                  to={`/search?query=${encodeURIComponent(searchQuery)}`}
-                  onChange={() => setSearchParams({ query: searchQuery })}>
-
-                  <i className="fa fa-search" />
+                <Link to={`/search?query=${encodeURIComponent(searchQuery)}`}
+                onChange={() => setSearchParams({ query: searchQuery })}>
+                  <i className="fa fa-search ms-5" style={{ fontSize: "20px", color: "black" }} />
                 </Link>
               </button>
+              {/*<ul>
+              { Product2.map((search)=>(
+                      <li key={search.product_id}>{search.english_name}</li>
+                  ))}
+              </ul>*/}
             </div>
+            {/*<div className='dropdown-content'>
+              {
+                searchQuery &&
+                searchParams.filter(item => item.english_name.startsWith(searchQuery) && item.english_name !== searchQuery)
+                  .slice(0, 5)
+                  .map(item => <div key={item.product_id} onClick={(e) => setSearchQuery(item.english_name)}>
+                    {item.english_name}
+                  </div>)
+              }
+            </div>*/}
           </div>
-          <div className="col-lg-3 col-md-4 col-sm-4 text-end d-flex mt-5" >
+          <div className="col-lg-3 col-md-3 col-sm-3 text-end d-flex mt-5" >
 
             <div className='nav-sec-icon-div1'><i className="fa-solid fa-wallet nav-sec-icon1 fa-beat"></i></div>
             <Link to="/login" className='position-relative'>
@@ -282,12 +295,11 @@ const Header = () => {
             </Link>)}
 
 
-            <p className='' style={{ color: "black",fontSize:"13px"}}><b>TOTAL PRICE<br /><b>&#8377; {subtotal.toFixed(2)}</b></b></p>
+            <p className='' style={{ color: "black", fontSize: "13px" }}><b>TOTAL PRICE<br /><b style={{ color: "red", fontSize: "14px" }}>₹ {subtotal.toFixed(2)}</b></b></p>
           </div>
           <div className="col-lg-3 col-md-2 col-sm-2 text-end d-flex">
             <div className='login-img-div ' ><img className='login-img' src="https://vsmart.ajspire.com/images/ee.png" alt="Login Image" /></div>
-            {/*<button type="button " class="nav-sec-btnlogin btn-primary"><Link to="/login" style={{ color: "white", textDecoration: "none" }}>Login</Link></button>
-<button type="button" class="btn-success nav-btn-logout" onClick={logout}>Logout</button>*/}
+
 
             <ul className='navbar-nav ms-5'>
               {
@@ -317,55 +329,26 @@ const Header = () => {
 
 
             </ul>
-            {/*<nav class="navbar"  style={{ backgroundColor: "#eee" }}>
-                  {token ? (
-                  <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                      <Link class="nav-link dropdown-toggle text-center" to='/login' id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                   {user && user.name}
-                      </Link>
-                      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">My Account</a>
-                        <a class="dropdown-item" href="#">My order</a>
-                        <a class="dropdown-item" href="#">Logout</a>
-                      </div>
-                    </li>
-                  </ul>
-                  ):(
 
-                  <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                      <Link class="nav-link dropdown-toggle text-center" to='/login' id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    login
-                      </Link>
-                      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">My Account</a>
-                        <a class="dropdown-item" href="#">My Order</a>
-                        <a class="dropdown-item" href="#">Sign In</a>
-                      </div>
-                    </li>
-                  </ul>)
-                  }
-                </nav>*/}
           </div>
         </div>
       </div>
       {/*navbar third */}
-      <nav className="navbar navbar-expand-lg navbar-light bg-light " style={{ height: "80px" }}>
-        <div className="container-fluid">
+      <nav className="navbar navbar-expand-lg navbar-light bg-light " style={{ height: "80px" ,zIndex:"2"}}>
+        <div className="container-fluid" >
 
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon" />
           </button>
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+          <div className="collapse navbar-collapse" id="navbarSupportedContent" >
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <Link className="nav-link active" aria-current="page" to="/" style={{ marginLeft: "40px" }}>Home</Link>
+                <Link className="nav-link active" aria-current="page" to="/" style={{ marginLeft: "90px", fontSize: "20px" }}>Home</Link>
               </li>
               <li className="navbar-item dropdown-megamenu" >
-                <Link to="/shopping" className="nav-item nav-link" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} >
+                <Link to="/shopping" className="nav-item nav-link" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} style={{ fontSize: "20px" }} >
                   Categories
-                  <i class="fa fa-caret-down" style={{ fontSize: "20px", marginLeft: "5px" }} ></i>
+                  <i class="fa fa-caret-down" style={{ fontSize: "20px", marginLeft: "5px", fontSize: "20px" }} ></i>
                 </Link>
 
                 <Dropdown show={showMegaMenu} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
@@ -405,7 +388,7 @@ const Header = () => {
 
               </li>
               <li className="navbar-item dropdown-megamenu">
-                <Link to="/shopping" className="nav-item nav-link" onMouseEnter={handleMouseEnter1} onMouseLeave={handleMouseLeave1}>
+                <Link to="/shopping" className="nav-item nav-link" onMouseEnter={handleMouseEnter1} onMouseLeave={handleMouseLeave1} style={{ fontSize: "20px" }}>
                   Brands
                   <i class="fa fa-caret-down" style={{ fontSize: "20px", marginLeft: "5px" }} ></i>
                 </Link>
@@ -430,31 +413,31 @@ const Header = () => {
                 </Dropdown>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/shop">Shop</Link>
+                <Link className="nav-link" to="/shop" style={{ fontSize: "20px" }}>Shop</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/about">About</Link>
+                <Link className="nav-link" to="/about" style={{ fontSize: "20px" }}>About</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/bank">Banking Details</Link>
-              </li>
-
-              <li className="nav-item">
-                <Link className="nav-link" to="/download">Download</Link>
+                <Link className="nav-link" to="/bank" style={{ fontSize: "20px" }}>Banking Details</Link>
               </li>
 
               <li className="nav-item">
-                <Link className="nav-link" to="/legal">Legal</Link>
+                <Link className="nav-link" to="/download" style={{ fontSize: "20px" }}>Download</Link>
               </li>
 
               <li className="nav-item">
-                <Link className="nav-link" to="#">Blog</Link>
+                <Link className="nav-link" to="/legal" style={{ fontSize: "20px" }}>Legal</Link>
+              </li>
+
+              <li className="nav-item">
+                <Link className="nav-link" to="/blog" style={{ fontSize: "20px" }}>Blog</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" href="#"><span style={{ color: "green", fontSize: "25px" }}><i class="fa-solid fa-mobile-screen"></i></span> Call Us <br></br>   +91 7262989579</Link>
+                <Link className="nav-link" href="#" style={{ fontSize: "20px" }}><span style={{ color: "green", fontSize: "20px", fontWeight: "bold" }}><i class="fa-solid fa-mobile-screen"></i></span> Call Us <br></br>   +91 7262989579</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" href="#"><span style={{ color: "green", fontSize: "25px" }}><i class="fa-solid fa-at"></i></span> Email Us <br></br>   vsmart123@gmail.com</Link>
+                <Link className="nav-link" href="#" style={{ fontSize: "20px" }}><span style={{ color: "green", fontSize: "20px", fontWeight: "bold" }}><i class="fa-solid fa-at"></i></span> Email Us <br></br>   vsmart123@gmail.com</Link>
               </li>
             </ul>
             <form className="d-flex">
@@ -507,84 +490,7 @@ const Header = () => {
             </div>
 
           </div>
-          {/*<div className='container' style={{ marginTop: "100px" }}>
-            <div className='row'>
-              <div className="col-12">
-                <form>
-                  <div className='table-content table-responsive'>
-                    <table className='table-table-bordered p-5' style={{ width: "100%", border: "1px solid #000", borderRadius: "8px" }} >
-                      <thead>
-                        <tr>
-                          <th style={{ backgroundColor: "#43A047", fontSize: "20px", textAlign: "center", padding: "20px", border: "1px solid #000" }} className='text-white'>SR.No</th>
-                          <th style={{ backgroundColor: "#43A047", fontSize: "20px", textAlign: "center", border: "1px solid #000" }} className='text-white'>Product</th>
-                          <th style={{ backgroundColor: "#43A047", fontSize: "20px", textAlign: "center", border: "1px solid #000" }} className='text-white'>Product Name</th>
-                          <th style={{ backgroundColor: "#43A047", fontSize: "20px", textAlign: "center", border: "1px solid #000" }} className='text-white'>Price</th>
-                          <th style={{ backgroundColor: "#43A047", fontSize: "20px", textAlign: "center", border: "1px solid #000" }} className='text-white'>Brand</th>
-                          <th style={{ backgroundColor: "#43A047", fontSize: "20px", textAlign: "center", border: "1px solid #000" }} className='text-white'>Quality</th>
-                          <th style={{ backgroundColor: "#43A047", fontSize: "20px", textAlign: "center", border: "1px solid #000" }} className='text-white'>Tax</th>
-                          <th style={{ backgroundColor: "#43A047", fontSize: "20px", textAlign: "center", border: "1px solid #000" }} className='text-white'>P V</th>
-                          <th style={{ backgroundColor: "#43A047", fontSize: "20px", textAlign: "center", border: "1px solid #000" }} className='text-white'>TOTAL</th>
-    
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {
-    
-                          Cart.map((item) => (
-    
-    
-                            <tr>
-    
-                              <td className="li-product-remove"><a href="#"><i className="fa fa-times" /></a></td>
-                              <td className="li-product-thumbnail"><a href="#"><img width={150} height={150} src={'https://vsmart.ajspire.com/uploads/product_image/' + item.product_image} alt="Li's Product Image" /></a></td>
-                              <td className="li-product-name"><a href="#">{item.english_name}</a></td>
-                              <td className="li-product-price"><span className="amount">&#8377;{item.online_price}</span></td>
-                              <td className="quantity">
-                                <label>Quantity</label>
-                                <div className="cart-plus-minus">
-                                  <input className="cart-plus-minus-box" value={item.cart_product_qty} type="text" />
-                                  <div className="dec qtybutton"><i className="fa fa-angle-down" /></div>
-                                  <div className="inc qtybutton"><i className="fa fa-angle-up" /></div>
-                                </div>
-                              </td>
-                              <td className="product-subtotal"><span className="amount">&#8377;{((item.online_price * item.cart_product_qty * item.tax_per) / (100 + item.tax_per)).toFixed(2)}</span></td>
-                              <td className="product-subtotal"><span className="amount">{item.point_value}</span></td>
-    
-                              <td className="product-subtotal"><span className="amount">&#8377;{item.online_price * item.cart_product_qty}</span></td>
-                            </tr>
-                          ))}
-    
-    
-    
-                      </tbody>
-    
-                    </table>
-                  </div>
-                  
-                  <hr className='hr1' style={{color:"green"}}></hr>
-                  <div className="row">
-                    <div className="col-md-5" >
-                      <div className="cart-page-total">
-                        <h1 className='' >Cart Details</h1>
-                        <ul>
-                          <li>Subtotal <span>&#8377;{subtotal.toFixed(2)}</span></li>
-                          <li>Gst <span>&#8377;{gst.toFixed(2)}</span></li>
-                          <li>P V Value <span>&#8377;{pv.toFixed(2)}</span></li>
-                          <li>Discount <span>&#8377;{disc.toFixed(2)}</span></li>
-                          <li>Total <span>&#8377;{subtotal.toFixed(2)}</span></li>
-                          </ul>
-                          <div className='btncheck'>
-                         
-                          <button type="button" class="btn-process btn-success p-3 " ><Link to={'/checkout'}></Link>Proceed to checkout</button>
-                          </div>
-                          </div>
-                    </div>
-                  </div>
-                </form>
-              </div>
-    
-            </div>
-                          </div>*/}
+
         </Offcanvas.Body>
 
 

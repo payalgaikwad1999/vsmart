@@ -22,6 +22,8 @@ import Subproduct from './Website/Pages/Subproduct';
 import Subitems from './Website/Pages/Subitems';
 import Checkout from './Website/Pages/Checkout';
 import Order from './Website/Pages/Order';
+import Bolg from './Website/Pages/Bolg';
+
 
 
 function App() {
@@ -47,6 +49,7 @@ function App() {
 <Route path='/subitem' element={<Master Comp={Subitems}/>}/>
 <Route path='/chekout' element={<Master Comp={Checkout}/>}/>
 <Route path='/order' element={<Master Comp={Order}/>}/>
+<Route path='/blog' element={<Master Comp={Bolg}/>}/>
 </Routes>
 </BrowserRouter>
     </div>

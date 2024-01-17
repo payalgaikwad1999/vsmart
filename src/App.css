@@ -2,6 +2,7 @@
   background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsvckfroLmb4lnZ6bTlXEnRv6nLY10dnz5Qw&usqp=CAU");
 background-size: cover;
 background-repeat: no-repeat;
+
 }
 
 .caro{
@@ -82,6 +83,7 @@ background-repeat: no-repeat;
   border-radius: 5px;
   box-shadow: 6px 6px 5px grey;
   margin-top: 5px;
+
   
 }
 
@@ -770,8 +772,11 @@ opacity: 0;
 .fs{
 color: grey;
 font-size: 20px;
-
 }
+.fs:hover{
+  color:blue ;
+}
+
 .fsolid {
   color: white;
   font-size: 20px; /* Adjust the font size as needed */
@@ -959,13 +964,13 @@ background-color: rgba(0, 0, 0, 0.1);
   padding: 10px;
   font-size: 16px;
   border: none;
-  background-color: rgb(197, 196, 196);
+  /* background-color: green; */
   border-radius: 5px;
   padding-right: 2px;
   color: rgb(50, 48, 48);
 }
 .b-card:hover{
-  background-color: green;
+  /* background-color: green; */
   color: white;
 }
 .cardimgtop{
@@ -1194,14 +1199,13 @@ margin-left: 10px;
 .shop-search-icon {
   padding-right: 5px;
 }
-
 /* checkout */
 .card-home{
-  background-color: rgb(212, 248, 212);
+  background-color: rgb(228, 247, 228);
 
 }
 .card-payment{
-background-color: rgb(232, 228, 228);  
+background-color: rgb(232, 226, 226);  
 }
 
 /* order */
@@ -1218,10 +1222,10 @@ background-color: rgb(232, 228, 228);
   border-radius: 5px;
 }
 .order-ul p{
-  color:rgb(49, 48, 48);
+  color:rgb(31, 30, 30);
   text-align: right;
-  width: 250px;
-  font-size: 15px;
+  width: 280px;
+  font-size: 16px;
 }
 .order-ull{
   background-color: rgb(231, 231, 231);
@@ -1232,10 +1236,203 @@ background-color: rgb(232, 228, 228);
   
 }
 .order-ull p{
-  color:rgb(49, 48, 48);
+  color:rgb(31, 30, 30);
   text-align: right;
   width: 250px;
-  font-size: 15px;
+  font-size: 16px;
 }
 
 
+
+.order-track-list {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.order-track-item {
+  flex: 1;
+  text-align: center;
+}
+
+.order-track-item i {
+  font-size: 24px;
+  color: #888;
+}
+
+
+/* tracklist */
+.orderlist-body{
+  height: 200px;
+  background-color:  rgb(231, 231, 231);;
+}
+
+.main-order1{
+  height: 6px; /* Adjust the height */
+  width: 95%; /* Adjust the width */
+  background-color:green;
+  position: relative;
+margin-top: 5%;
+display: flex;
+justify-content: center;
+align-items: center;
+margin-left: 2%;
+border-radius: 5px;
+}
+
+.tracklist-circle{
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+  border: 2px dashed green;
+  position: absolute;
+  top: -28px; 
+left: 8%;
+font-weight: bold;
+}
+.tracklist-circle1{
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+  border: 2px dashed green;
+  position: absolute;
+  background-color: #008000;
+  top: -28px; 
+left: 8%;
+font-weight: bold;
+}
+.tracklist-circle span {
+  position: absolute;
+  bottom: -45px; /* Adjust the positioning to move it above the line */
+/* Center horizontally */
+left: 10%;
+  /* transform: translateX(-50%);  */
+  font-weight: bold;
+  font-size: 15px;
+}
+.tracklist-circle1 span {
+  position: absolute;
+  bottom: -45px; /* Adjust the positioning to move it above the line */
+/* Center horizontally */
+left: 10%;
+  /* transform: translateX(-50%);  */
+  font-weight: bold;
+  font-size: 15px;
+}
+.order-icon{
+  margin-top: 9px;
+  font-size: 34px;
+  margin-left: 9px;
+  color: white;
+}
+.order-icon1{
+  margin-top: 9px;
+  font-size: 34px;
+  margin-left: 17px;
+  color: green;
+}
+
+.order-progress1{
+  background-color: green;
+  width: 20%;
+  position: relative;
+  height: 7px;
+}
+.order-p2{
+  background-color: #D3D3D3;
+  position: relative;
+}
+.order1{
+  position: relative;
+  background-color: #D3D3D3;
+  height: 7px;
+  width: 20%;
+}
+/* progressbar
+ */
+ 
+
+
+.order-progress{
+  position: relative;
+  background-color: white;
+  height: 7px;
+  width: 19%;
+}
+.myorder-icon{
+  font-weight: bold;
+  font-size: 32px;
+  margin-top: 8px;
+  color: #11823b;
+}
+.myorder-icon1{
+  font-weight: bold;
+  font-size: 32px;
+  margin-top: 8px;
+  color: #ffffff;
+}
+
+.scroll-btn{
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 99;
+  font-size: 16px;
+  border: none;
+  outline: none;
+  background-color: green;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 50%; 
+  height: 65px;
+  width: 65px;
+  
+  transition: opacity 0.3s ease, transform 0.3s ease;
+
+}
+.scroll-icon{
+  font-size: 30px;
+  color: white;
+  font-weight: bold;
+}
+/* Keyframes for the animation */
+::-webkit-scrollbar{
+  width: 2.5rem;
+}
+::-webkit-scrollbar-track{
+  background-color:#f4f1f1;
+}
+::-webkit-scrollbar-thumb{
+  background:rgb(167, 165, 165);
+  border: 5px solid transparent;
+  border-radius: 0px;
+  background-clip: content-box;
+}
+/* Scrollbar buttons for up and down arrows */
+::-webkit-scrollbar-button:start:decrement {
+  display: block;
+  content: '\25B2'; /* Unicode character for an upwards pointing triangle */
+  font-size: 1rem;
+  background-color: #9e9898; /* Background color for the button */
+  border: none;
+}
+
+::-webkit-scrollbar-button:end:increment {
+  display: block;
+  content: '\25BC'; /* Unicode character for a downwards pointing triangle */
+  font-size: 1rem;
+  color: white; /* Color of the arrow */
+  background-color: #f4f1f1;  /* Background color for the button */
+  border: none;
+}
+.dropdown-content{
+  display: block;
+  position: absolute;
+  color: white; /* Color of the arrow */
+  background-color: #f4f1f1; 
+  z-index: 1;
+}

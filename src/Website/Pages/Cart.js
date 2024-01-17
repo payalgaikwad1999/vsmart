@@ -19,8 +19,8 @@ const Cart = () => {
       }).catch((e) => {
         // console.log(e);
       });
-    }
-    
+  }
+
   useEffect(() => {
     getCartItem();
   }, [token]);
@@ -56,10 +56,10 @@ const Cart = () => {
     //   setDisc(disc);
     //   // console.log(disc);
     // }, [Cart]);
-  
+
 
     const newSubtotal = Cart.reduce(
-      (accumulator, item) => accumulator + item.online_price * item.cart_product_qty,
+      (accumulator, item) => accumulator + item.sale_price * item.cart_product_qty,
       0
     );
     setSubtotal(newSubtotal);
@@ -67,7 +67,7 @@ const Cart = () => {
     // Calculate the Gst whenever the cart items change
     // $gst = ($subto * $task->tax_per) / (100 + $task->tax_per);
     const gst = Cart.reduce(
-      (accumulator, item) => accumulator + (item.online_price * item.cart_product_qty * item.tax_per) / (100 + item.tax_per),
+      (accumulator, item) => accumulator + (item.sale_price * item.cart_product_qty * item.tax_per) / (100 + item.tax_per),
       0
     );
     setGst(gst);
@@ -116,14 +116,14 @@ const Cart = () => {
                   <thead>
                     <tr>
                       <th style={{ backgroundColor: "#43A047", fontSize: "20px", textAlign: "center", padding: "20px", border: "1px solid white" }} className='text-white'>Remove</th>
-                      <th style={{ backgroundColor: "#43A047", fontSize: "20px", textAlign: "center", padding: "20px",border: "1px solid white" }} className='text-white'>Product</th>
-                      <th style={{ backgroundColor: "#43A047", fontSize: "20px", textAlign: "center", padding: "20px",border: "1px solid white" }} className='text-white'>Product Name</th>
-                      <th style={{ backgroundColor: "#43A047", fontSize: "20px", textAlign: "center",padding: "20px", border: "1px solid white" }} className='text-white'>Price</th>
-                      <th style={{ backgroundColor: "#43A047", fontSize: "20px", textAlign: "center",padding: "20px", border: "1px solid white" }} className='text-white'>Brand</th>
-                      <th style={{ backgroundColor: "#43A047", fontSize: "20px", textAlign: "center",padding: "20px", border: "1px solid white" }} className='text-white'>Quantity</th>
-                      <th style={{ backgroundColor: "#43A047", fontSize: "20px", textAlign: "center", padding: "20px",border: "1px solid white" }} className='text-white'>Tax</th>
-                      <th style={{ backgroundColor: "#43A047", fontSize: "20px", textAlign: "center",padding: "20px", border: "1px solid white" }} className='text-white'>P V</th>
-                      <th style={{ backgroundColor: "#43A047", fontSize: "20px", textAlign: "center", padding: "20px",border: "1px solid white" }} className='text-white'>TOTAL</th>
+                      <th style={{ backgroundColor: "#43A047", fontSize: "20px", textAlign: "center", padding: "20px", border: "1px solid white" }} className='text-white'>Product</th>
+                      <th style={{ backgroundColor: "#43A047", fontSize: "20px", textAlign: "center", padding: "20px", border: "1px solid white" }} className='text-white'>Product Name</th>
+                      <th style={{ backgroundColor: "#43A047", fontSize: "20px", textAlign: "center", padding: "20px", border: "1px solid white" }} className='text-white'>Price</th>
+                      <th style={{ backgroundColor: "#43A047", fontSize: "20px", textAlign: "center", padding: "20px", border: "1px solid white" }} className='text-white'>Brand</th>
+                      <th style={{ backgroundColor: "#43A047", fontSize: "20px", textAlign: "center", padding: "20px", border: "1px solid white" }} className='text-white'>Quantity</th>
+                      <th style={{ backgroundColor: "#43A047", fontSize: "20px", textAlign: "center", padding: "20px", border: "1px solid white" }} className='text-white'>Tax</th>
+                      <th style={{ backgroundColor: "#43A047", fontSize: "20px", textAlign: "center", padding: "20px", border: "1px solid white" }} className='text-white'>P V</th>
+                      <th style={{ backgroundColor: "#43A047", fontSize: "20px", textAlign: "center", padding: "20px", border: "1px solid white" }} className='text-white'>TOTAL</th>
 
                     </tr>
                   </thead>

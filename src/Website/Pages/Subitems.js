@@ -30,10 +30,33 @@ const Subitems = () => {
             alert(res.data.msg)
         }).catch((e) => { console.log(e); });
     }
+    // arrowup
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth" // Smooth scrolling
+        });
+    };
+    const scrollFunction = () => {
+        const scrollToTopButton = document.getElementById("scrollToTopBtn");
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            scrollToTopButton.style.display = "block";
+        } else {
+            scrollToTopButton.style.display = "none";
+        }
+    };
+
+    // Handle scroll event
+    useEffect(() => {
+        window.addEventListener("scroll", scrollFunction);
+        return () => {
+            window.removeEventListener("scroll", scrollFunction);
+        };
+    }, []);
     return (
         <div>
             <h1 className="Coll">All New Items</h1>
-            <div className="container ">
+            <div className="container " style={{ overflowY: "scroll" }}>
                 <div className='mb-5'>
                     <div className='row'>
                         {Item.map((data, index) => (
@@ -75,6 +98,7 @@ const Subitems = () => {
             <div className='just mt-5'>
                 <button type="button" className="btn1"><i class="fa-regular fa-eye"></i> Show More</button>
             </div>
+            <button className='scroll-btn' onClick={scrollToTop} id="scrollToTopBtn" style={{ display: 'none' }} ><i class="fa-solid fa-arrow-up scroll-icon"></i></button>
         </div>
     )
 }
